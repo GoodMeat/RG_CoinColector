@@ -3,4 +3,4 @@
  GIT repozitorij za zaključni seminar pri Računalniški grafiki
 
 
- CopyRight @ Simon Klančar & Gregor Novak
+ Copyright @ Simon Klančar & Gregor Novak

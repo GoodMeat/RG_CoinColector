@@ -374,6 +374,7 @@ function handleKeyUp(event) {
 // Called every time before redeawing the screen for keyboard
 // input handling. Function continuisly updates helper variables.
 //
+
 function handleKeys() {
     if (currentlyPressedKeys[33]) {
         // Page Up
@@ -395,15 +396,15 @@ function handleKeys() {
         yawRate = 0;
     }
 
-    if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
+    if ((currentlyPressedKeys[38] || currentlyPressedKeys[87])) {
         // Up cursor key or W
-        speed = 0.01;
-    } else if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
-        // Down cursor key
-        speed = -0.01;
+        wallCollisionDetect(1);
+    } else if ((currentlyPressedKeys[40] || currentlyPressedKeys[83])) {
+        wallCollisionDetect(-1);
     } else {
         speed = 0;
     }
+    fixCoordShift();
 }
 
 //

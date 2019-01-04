@@ -194,13 +194,13 @@ function setMatrixUniforms() {
 // the texture images. The handleTextureLoaded() callback will finish
 // the job; it gets called each time a texture finishes loading.
 //
-function initTextures() {
+function initTextures(texture) {
     wallTexture = gl.createTexture();
     wallTexture.image = new Image();
     wallTexture.image.onload = function () {
         handleTextureLoaded(wallTexture)
     }
-    wallTexture.image.src = "wall.png";
+    wallTexture.image.src = texture;
 }
 
 function handleTextureLoaded(texture) {
@@ -265,9 +265,9 @@ function handleLoadedWorld(data) {
 //
 // Loading world
 //
-function loadWorld() {
+function loadWorld(file) {
     var request = new XMLHttpRequest();
-    request.open("GET", "world.txt");
+    request.open("GET", file);
     request.onreadystatechange = function () {
         if (request.readyState == 4) {
             handleLoadedWorld(request.responseText);
@@ -407,6 +407,14 @@ function handleKeys() {
     fixCoordShift();
 }
 
+function draw() {
+    if (texturesLoaded) { // only draw scene and animate when textures are loaded.
+        requestAnimationFrame(animate);
+        handleKeys();
+        drawScene();
+    }
+}
+
 //
 // start
 //
@@ -430,22 +438,18 @@ function start() {
         initShaders();
 
         // Next, load and set up the textures we'll be using.
-        initTextures();
+        initTextures("asfalt.png");
 
         // Initialise world objects
-        loadWorld();
+        loadWorld("floor.txt");
 
         // Bind keyboard handling functions to document handlers
         document.onkeydown = handleKeyDown;
         document.onkeyup = handleKeyUp;
 
         // Set up to draw the scene periodically.
-        setInterval(function() {
-            if (texturesLoaded) { // only draw scene and animate when textures are loaded.
-                requestAnimationFrame(animate);
-                handleKeys();
-                drawScene();
-            }
-        }, 15);
+        setInterval(draw(), 15);
+        initTextures("asfalt.png");
+
     }
 }

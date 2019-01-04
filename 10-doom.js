@@ -8,7 +8,10 @@ var floorVertexPositionBuffer = null;
 var skyVertexPositionBuffer = null;
 var wallVertexPositionBuffer = null;
 var vertexPositionBuffers = [floorVertexPositionBuffer, skyVertexPositionBuffer, wallVertexPositionBuffer]
-var worldVertexTextureCoordBuffer = null;
+var floorVertexTextureCoordBuffer = null;
+var skyVertexTextureCoordBuffer = null;
+var wallVertexTextureCoordBuffer = null;
+var vertexTextureCoordBuffers = [floorVertexTextureCoordBuffer, skyVertexTextureCoordBuffer, wallVertexTextureCoordBuffer];
 
 // Model-view and projection matrix and model-view matrix stack
 var mvMatrixStack = [];
@@ -257,11 +260,11 @@ function handleLoadedWorld(data, index) {
     vertexPositionBuffers[index].itemSize = 3;
     vertexPositionBuffers[index].numItems = vertexCount;
 
-    worldVertexTextureCoordBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
+    vertexTextureCoordBuffers[index] = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[index]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexTextureCoords), gl.STATIC_DRAW);
-    worldVertexTextureCoordBuffer.itemSize = 2;
-    worldVertexTextureCoordBuffer.numItems = vertexCount;
+    vertexTextureCoordBuffers[index].itemSize = 2;
+    vertexTextureCoordBuffers[index].numItems = vertexCount;
 
     document.getElementById("loadingtext").textContent = "";
 }
@@ -294,8 +297,8 @@ function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // If buffers are empty we stop loading the application.
-    if (worldVertexTextureCoordBuffer == null || vertexPositionBuffers[0] == null ||
-        vertexPositionBuffers[1] == null || vertexPositionBuffers[2] == null) {
+    if (vertexTextureCoordBuffers[0] == null || vertexTextureCoordBuffers[1] == null || vertexTextureCoordBuffers[2] == null ||
+        vertexPositionBuffers[0] == null || vertexPositionBuffers[1] == null || vertexPositionBuffers[2] == null) {
         return;
     }
 
@@ -316,8 +319,8 @@ function drawScene() {
     mat4.translate(mvMatrix, [-xPosition, -yPosition, -zPosition]);
 
     // Set the texture coordinates attribute for the vertices.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[0]);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[0].itemSize, gl.FLOAT, false, 0, 0);
     // Activate textures
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, textures[0]);
@@ -330,12 +333,18 @@ function drawScene() {
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[0].numItems);
 
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[1]);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[1].itemSize, gl.FLOAT, false, 0, 0);
     gl.bindTexture(gl.TEXTURE_2D, textures[1]);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[1]);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[1].itemSize, gl.FLOAT, false, 0, 0);
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[1].numItems);
 
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[2]);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[2].itemSize, gl.FLOAT, false, 0, 0);
     gl.bindTexture(gl.TEXTURE_2D, textures[2]);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[2]);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[2].itemSize, gl.FLOAT, false, 0, 0);

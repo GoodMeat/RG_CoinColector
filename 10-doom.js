@@ -4,7 +4,10 @@ var gl;
 var shaderProgram;
 
 // Buffers
-var worldVertexPositionBuffer = null;
+var floorVertexPositionBuffer = null;
+var skyVertexPositionBuffer = null;
+var wallVertexPositionBuffer = null;
+var vertexPositionBuffers = [floorVertexPositionBuffer, skyVertexPositionBuffer, wallVertexPositionBuffer]
 var worldVertexTextureCoordBuffer = null;
 
 // Model-view and projection matrix and model-view matrix stack
@@ -13,7 +16,10 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
 // Variables for storing textures
+var floorTexture;
+var skyTexture;
 var wallTexture;
+var textures = [floorTexture, skyTexture, wallTexture];
 
 // Variable that stores  loading state of textures.
 var texturesLoaded = false;
@@ -194,13 +200,13 @@ function setMatrixUniforms() {
 // the texture images. The handleTextureLoaded() callback will finish
 // the job; it gets called each time a texture finishes loading.
 //
-function initTextures(texture) {
-    wallTexture = gl.createTexture();
-    wallTexture.image = new Image();
-    wallTexture.image.onload = function () {
-        handleTextureLoaded(wallTexture)
+function initTextures(name, index) {
+    textures[index] = gl.createTexture();
+    textures[index].image = new Image();
+    textures[index].image.onload = function () {
+        handleTextureLoaded(textures[index])
     }
-    wallTexture.image.src = texture;
+    textures[index].image.src = name;
 }
 
 function handleTextureLoaded(texture) {
@@ -224,7 +230,7 @@ function handleTextureLoaded(texture) {
 //
 // Initialisation of world
 //
-function handleLoadedWorld(data) {
+function handleLoadedWorld(data, index) {
     var lines = data.split("\n");
     var vertexCount = 0;
     var vertexPositions = [];
@@ -245,11 +251,11 @@ function handleLoadedWorld(data) {
         }
     }
 
-    worldVertexPositionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
+    vertexPositionBuffers[index] = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[index]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositions), gl.STATIC_DRAW);
-    worldVertexPositionBuffer.itemSize = 3;
-    worldVertexPositionBuffer.numItems = vertexCount;
+    vertexPositionBuffers[index].itemSize = 3;
+    vertexPositionBuffers[index].numItems = vertexCount;
 
     worldVertexTextureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
@@ -265,12 +271,12 @@ function handleLoadedWorld(data) {
 //
 // Loading world
 //
-function loadWorld(file) {
+function loadWorld(name, index) {
     var request = new XMLHttpRequest();
-    request.open("GET", file);
+    request.open("GET", name);
     request.onreadystatechange = function () {
         if (request.readyState == 4) {
-            handleLoadedWorld(request.responseText);
+            handleLoadedWorld(request.responseText, index);
         }
     }
     request.send();
@@ -288,7 +294,8 @@ function drawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // If buffers are empty we stop loading the application.
-    if (worldVertexTextureCoordBuffer == null || worldVertexPositionBuffer == null) {
+    if (worldVertexTextureCoordBuffer == null || vertexPositionBuffers[0] == null ||
+        vertexPositionBuffers[1] == null || vertexPositionBuffers[2] == null) {
         return;
     }
 
@@ -308,23 +315,32 @@ function drawScene() {
     mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
     mat4.translate(mvMatrix, [-xPosition, -yPosition, -zPosition]);
 
-    // Activate textures
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, wallTexture);
-    gl.uniform1i(shaderProgram.samplerUniform, 0);
-
     // Set the texture coordinates attribute for the vertices.
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    // Activate textures
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, textures[0]);
+    gl.uniform1i(shaderProgram.samplerUniform, 0);
 
     // Draw the world by binding the array buffer to the world's vertices
     // array, setting attributes, and pushing it to GL.
-    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-    // Draw the cube.
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[0]);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[0].itemSize, gl.FLOAT, false, 0, 0);
     setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLES, 0, worldVertexPositionBuffer.numItems);
+    gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[0].numItems);
+
+    gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[1]);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[1].itemSize, gl.FLOAT, false, 0, 0);
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[1].numItems);
+
+    gl.bindTexture(gl.TEXTURE_2D, textures[2]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[2]);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[2].itemSize, gl.FLOAT, false, 0, 0);
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[2].numItems);
 }
 
 //
@@ -407,13 +423,7 @@ function handleKeys() {
     fixCoordShift();
 }
 
-function draw() {
-    if (texturesLoaded) { // only draw scene and animate when textures are loaded.
-        requestAnimationFrame(animate);
-        handleKeys();
-        drawScene();
-    }
-}
+
 
 //
 // start
@@ -437,19 +447,23 @@ function start() {
         // vertices and so forth is established.
         initShaders();
 
-        // Next, load and set up the textures we'll be using.
-        initTextures("asfalt.png");
-
-        // Initialise world objects
-        loadWorld("floor.txt");
-
         // Bind keyboard handling functions to document handlers
         document.onkeydown = handleKeyDown;
         document.onkeyup = handleKeyUp;
 
         // Set up to draw the scene periodically.
-        setInterval(draw(), 15);
-        initTextures("asfalt.png");
-
+        initTextures("asfalt.png", 0);
+        initTextures("Sky.png", 1);
+        initTextures("Buildings.png", 2);
+        loadWorld("floor.txt", 0);
+        loadWorld("sky.txt", 1);
+        loadWorld("walls.txt", 2);
+        setInterval(function () {
+            if (texturesLoaded) { // only draw scene and animate when textures are loaded.
+                requestAnimationFrame(animate);
+                handleKeys();
+                drawScene();
+            }
+        }, 15);
     }
 }

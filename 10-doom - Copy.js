@@ -12,9 +12,9 @@ var coinBonusVertexPositionBuffer = null;
 var coinSpeedVertexPositionBuffer = null;
 var coinProtectVertexPositionBuffer = null;
 var vertexPositionBuffers = [
-        floorVertexPositionBuffer, skyVertexPositionBuffer, wallVertexPositionBuffer,
-        coinVertexPositionBuffer, coinBonusVertexPositionBuffer, coinSpeedVertexPositionBuffer, coinProtectVertexPositionBuffer
-        ];
+    floorVertexPositionBuffer, skyVertexPositionBuffer, wallVertexPositionBuffer,
+    coinVertexPositionBuffer, coinBonusVertexPositionBuffer, coinSpeedVertexPositionBuffer, coinProtectVertexPositionBuffer
+];
 var floorVertexTextureCoordBuffer = null;
 var skyVertexTextureCoordBuffer = null;
 var wallVertexTextureCoordBuffer = null;
@@ -23,9 +23,9 @@ var coinBonusVertexTextureCoordBuffer = null;
 var coinSpeedVertexTextureCoordBuffer = null;
 var coinProtectVertexTextureCoordBuffer = null;
 var vertexTextureCoordBuffers = [
-        floorVertexTextureCoordBuffer, skyVertexTextureCoordBuffer, wallVertexTextureCoordBuffer, 
-        coinVertexTextureCoordBuffer, coinBonusVertexTextureCoordBuffer, coinSpeedVertexTextureCoordBuffer, coinProtectVertexTextureCoordBuffer
-        ];
+    floorVertexTextureCoordBuffer, skyVertexTextureCoordBuffer, wallVertexTextureCoordBuffer,
+    coinVertexTextureCoordBuffer, coinBonusVertexTextureCoordBuffer, coinSpeedVertexTextureCoordBuffer, coinProtectVertexTextureCoordBuffer
+];
 
 // Model-view and projection matrix and model-view matrix stack
 var mvMatrixStack = [];
@@ -291,108 +291,124 @@ function initCoinBuffer(){
     vertexPositionBuffers[3] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[3]);
     var verticies = [
-         0.5,  0.5,  0.0,
-        -0.5,  0.5,  0.0,
-        -0.5, -0.5,  0.0,
-         0.5, -0.5,  0.0
+        -0.125, 0.45,  0.0,
+        -0.125, 0.2,  0.0,
+        0.125, 0.2,  0.0,
+        -0.125, 0.45,  0.0,
+        0.125, 0.45,  0.0,
+        0.125, 0.2,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW);
     vertexPositionBuffers[3].itemSize = 3;
-    vertexPositionBuffers[3].numItems = 4;
+    vertexPositionBuffers[3].numItems = 6;
 
-    
+
     vertexTextureCoordBuffers[3] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[3]);
     var texcoor = [
+        0.0, 1.0,
         0.0, 0.0,
         1.0, 0.0,
+        0.0, 1.0,
         1.0, 1.0,
-        0.0, 1.0
+        1.0, 0.0,
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoor), gl.STATIC_DRAW);
     vertexTextureCoordBuffers[3].itemSize = 2;
-    vertexTextureCoordBuffers[3].numItems = 4;
+    vertexTextureCoordBuffers[3].numItems = 6;
 }
 
 function initBonusCoinBuffer(){
     vertexPositionBuffers[4] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[4]);
     var verticies = [
-         0.5,  0.5,  0.0,
-        -0.5,  0.5,  0.0,
-        -0.5, -0.5,  0.0,
-         0.5, -0.5,  0.0
+        -0.125, 0.45,  0.0,
+        -0.125, 0.2,  0.0,
+        0.125, 0.2,  0.0,
+        -0.125, 0.45,  0.0,
+        0.125, 0.45,  0.0,
+        0.125, 0.2,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW);
     vertexPositionBuffers[4].itemSize = 3;
-    vertexPositionBuffers[4].numItems = 4;
+    vertexPositionBuffers[4].numItems = 6;
 
-    
+
     vertexTextureCoordBuffers[4] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[4]);
     var texcoor = [
+        0.0, 1.0,
         0.0, 0.0,
         1.0, 0.0,
+        0.0, 1.0,
         1.0, 1.0,
-        0.0, 1.0
+        1.0, 0.0,
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoor), gl.STATIC_DRAW);
     vertexTextureCoordBuffers[4].itemSize = 2;
-    vertexTextureCoordBuffers[4].numItems = 4;
+    vertexTextureCoordBuffers[4].numItems = 6;
 }
 
 function initSpeedCoinBuffer(){
     vertexPositionBuffers[5] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[5]);
     var verticies = [
-         0.5,  0.5,  0.0,
-        -0.5,  0.5,  0.0,
-        -0.5, -0.5,  0.0,
-         0.5, -0.5,  0.0
+        -0.125, 0.45,  0.0,
+        -0.125, 0.2,  0.0,
+        0.125, 0.2,  0.0,
+        -0.125, 0.45,  0.0,
+        0.125, 0.45,  0.0,
+        0.125, 0.2,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW);
     vertexPositionBuffers[5].itemSize = 3;
-    vertexPositionBuffers[5].numItems = 4;
+    vertexPositionBuffers[5].numItems = 6;
 
-    
+
     vertexTextureCoordBuffers[5] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[5]);
     var texcoor = [
+        0.0, 1.0,
         0.0, 0.0,
         1.0, 0.0,
+        0.0, 1.0,
         1.0, 1.0,
-        0.0, 1.0
+        1.0, 0.0,
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoor), gl.STATIC_DRAW);
     vertexTextureCoordBuffers[5].itemSize = 2;
-    vertexTextureCoordBuffers[5].numItems = 4;
+    vertexTextureCoordBuffers[5].numItems = 6;
 }
 
 function initProtectCoinBuffer(){
     vertexPositionBuffers[6] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[6]);
     var verticies = [
-         0.5,  0.5,  0.0,
-        -0.5,  0.5,  0.0,
-        -0.5, -0.5,  0.0,
-         0.5, -0.5,  0.0
+        -0.125, 0.45,  0.0,
+        -0.125, 0.2,  0.0,
+        0.125, 0.2,  0.0,
+        -0.125, 0.45,  0.0,
+        0.125, 0.45,  0.0,
+        0.125, 0.2,  0.0
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verticies), gl.STATIC_DRAW);
     vertexPositionBuffers[6].itemSize = 3;
-    vertexPositionBuffers[6].numItems = 4;
+    vertexPositionBuffers[6].numItems = 6;
 
-    
+
     vertexTextureCoordBuffers[6] = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[6]);
     var texcoor = [
+        0.0, 1.0,
         0.0, 0.0,
         1.0, 0.0,
+        0.0, 1.0,
         1.0, 1.0,
-        0.0, 1.0
+        1.0, 0.0,
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoor), gl.STATIC_DRAW);
     vertexTextureCoordBuffers[6].itemSize = 2;
-    vertexTextureCoordBuffers[6].numItems = 4;
+    vertexTextureCoordBuffers[6].numItems = 6;
 }
 
 //
@@ -473,7 +489,7 @@ function drawScene() {
     gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[2].numItems);
 
     //KOVANCI
-    mat4.translate(mvMatrix, [0.0, 0.6, -5.0]);
+    mat4.translate(mvMatrix, [0.0, 0.0, 0.0]);
     //mat4.rotate(mvMatrix, degToRad(-90), [0, 1, 0]);
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[3]);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
@@ -491,16 +507,16 @@ function drawScene() {
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[3].numItems);
-/*
-    mat4.translate(mvMatrix, [0.0, 0.6, -12.0]);
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[3]);
-    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
-    gl.bindTexture(gl.TEXTURE_2D, textures[3]);
-    gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[3]);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
-    setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[3].numItems);
-    */
+    /*
+        mat4.translate(mvMatrix, [0.0, 0.6, -12.0]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexTextureCoordBuffers[3]);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, vertexTextureCoordBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
+        gl.bindTexture(gl.TEXTURE_2D, textures[3]);
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexPositionBuffers[3]);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, vertexPositionBuffers[3].itemSize, gl.FLOAT, false, 0, 0);
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[3].numItems);
+        */
 }
 
 //
@@ -626,7 +642,7 @@ function start() {
         loadWorld("floor.txt", 0);
         loadWorld("sky.txt", 1);
         loadWorld("walls.txt", 2);
-        
+
         setInterval(function () {
             if (texturesLoaded) { // only draw scene and animate when textures are loaded.
                 requestAnimationFrame(animate);

@@ -111,7 +111,13 @@ function wallCollisionDetect(direction) {
         speed = 0;
         xPosition = -67.69;
     } else {
-        speed = 0.01 * direction;
+        if(!speed1){
+            speed = 0.02 * direction;
+        }
+        else{
+            speed = 0.01 * direction;
+        }
+        
     }
 }
 

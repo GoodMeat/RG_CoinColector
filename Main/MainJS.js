@@ -910,21 +910,21 @@ function start() {
         document.onkeyup = handleKeyUp;
 
         // Set up to draw the scene periodically.
-        initTextures("asfalt.png", 0);
-        initTextures("Sky.png", 1);
-        initTextures("Buildings.png", 2);
-        initTextures("CoinNavaden.png", 3);
-        initTextures("CoinBonus.png", 4);
-        initTextures("CoinHitrostni.png", 5);
-        initTextures("CoinZascitni.png", 6);
-        initTextures("Monster.png", 7);
+        initTextures("./Resources/Textures/Floor.png", 0);
+        initTextures("./Resources/Textures/Sky.png", 1);
+        initTextures("./Resources/Textures/Walls.png", 2);
+        initTextures("./Resources/Textures/CoinNavaden.png", 3);
+        initTextures("./Resources/Textures/CoinBonus.png", 4);
+        initTextures("./Resources/Textures/CoinHitrostni.png", 5);
+        initTextures("./Resources/Textures/CoinZascitni.png", 6);
+        initTextures("./Resources/Textures/Monster.png", 7);
         initCoinBuffer();
         initBonusCoinBuffer();
         initSpeedCoinBuffer();
         initProtectCoinBuffer();
-        loadWorld("floor.txt", 0);
-        loadWorld("Sky.txt", 1);
-        loadWorld("walls.txt", 2);
+        loadWorld("./Resources/World/floor.txt", 0);
+        loadWorld("./Resources/World/sky.txt", 1);
+        loadWorld("./Resources/World/walls.txt", 2);
 
         setInterval(function () {
             if (texturesLoaded && tocke != 23) { // only draw scene and animate when textures are loaded.

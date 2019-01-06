@@ -1,7 +1,10 @@
 // Global variable definitionvar canvas;
 var canvas;
+var canvas2;
 var gl;
 var shaderProgram;
+
+var gameOver = false;
 
 // Buffers
 var floorVertexPositionBuffer = null;
@@ -40,7 +43,9 @@ var coinTexture;
 var coinBonusTexture;
 var coinSpeedTexture;
 var coinProtectTexture;
-var textures = [floorTexture, skyTexture, wallTexture, coinTexture, coinBonusTexture, coinSpeedTexture, coinProtectTexture];
+var monsterTexture;
+var textures = [floorTexture, skyTexture, wallTexture, coinTexture, coinBonusTexture, coinSpeedTexture, coinProtectTexture,
+    monsterTexture];
 
 // Variable that stores  loading state of textures.
 var texturesLoaded = false;
@@ -57,6 +62,150 @@ var xPosition = 0;
 var yPosition = 0.4;
 var zPosition = 0;
 var speed = 0;
+
+// monster
+var x1 = 14.0;
+var x2 = 18.0;
+var z1 = -98.0;
+var z2 = -94.0;
+var xMove = 0;
+var zMove = 0;
+var protMonster = "Protection against monster: Off"
+var monsterVertexPositionBuffer = null;
+var monsterVertexTextureCoordBuffer = null;
+
+var monsterCoordinates;
+var monsterTextureCoordinates = [
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 1.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 1.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 0.0,
+    1.0, 1.0,
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 0.0,
+    1.0, 1.0
+];
+
+function updateMonster(x1, x2, z1, z2) {
+    monsterCoordinates = [
+        x1, 8.0, z1,
+        x1, 0.0, z1,
+        x2, 0.0, z1,
+        x1, 8.0, z1,
+        x2, 8.0, z1,
+        x2, 0.0, z1,
+        x1, 8.0, z2,
+        x1, 0.0, z2,
+        x2, 0.0, z2,
+        x1, 8.0, z2,
+        x2, 8.0, z2,
+        x2, 0.0, z2,
+        x2, 8.0, z1,
+        x2, 0.0, z1,
+        x2, 0.0, z2,
+        x2, 8.0, z1,
+        x2, 0.0, z2,
+        x2, 8.0, z2,
+        x1, 8.0, z1,
+        x1, 0.0, z1,
+        x1, 0.0, z2,
+        x1, 8.0, z1,
+        x1, 0.0, z2,
+        x1, 8.0, z2
+    ]
+}
+
+function moveMonster() {
+    if ((13.9 <= x1 && x1 <= 14.1) && z1 <= -97.9) {
+        xMove = 0.2;
+        zMove = 0.0;
+    } else if ((29.9 <= x1 && x1 <= 30.1) && (z1 <= -97.9)) {
+        xMove = 0.0;
+        zMove = 0.2;
+    } else if((29.9 <= x1 && x1 <= 30.1) && (-66.1 <= z1 && z1 <= -65.9)) {
+        xMove = -0.2;
+        zMove = 0.0;
+    } else if ((-18.1 <= x1 && x1 <= -17.9) && (-66.1 <= z1 && z1 <= -65.9 )) {
+        xMove = 0.0;
+        zMove = 0.2;
+    } else if ((-18.1 <= x1 && x1 <= 17.9) && (-50.1 <= z1 && z1 <= -49.9)) {
+        xMove = 0.2;
+        zMove = 0.0;
+    } else if ((29.9 <= x1 && x1 <= 30.1) && (-50.1 <= z1 && z1 <= -49.9)) {
+        xMove = 0.0;
+        zMove = 0.2;
+    } else if ((29.9 <= x1 && x1 <= 30.1) && (-2.1 <= z1 && z1 <= -1.9)) {
+        xMove = -0.2;
+        zMove = 0.0;
+    } else if ((13.9 <= x1 && x1 <= 15.1) && (-2.1 <= z1 && z1 <= -1.9)) {
+        xMove = 0.0;
+        zMove = -0.2;
+    } else if ((13.9 <= x1 && x1 <= 15.1) && (-34.1 <= z1 && z1 <= -33.9)) {
+        xMove = -0.2;
+        zMove = 0.0;
+    } else if ((-34.1 <= x1 && x1 <= -33.9) && (-34.1 <= z1 && z1 <= -33.9)) {
+        xMove = 0.0;
+        zMove = -0.2
+    } else if ((-34.1 <= x1 && x1 <= -33.9) && (-66.1 <= z1 && z1 <= -65.9)) {
+        xMove = -0.2;
+        zMove = 0.0;
+    } else if ((-50.1 <= x1 && x1 <= -49.9) && (-66.1 <= z1 && z1 <= -65.9)) {
+        xMove = 0.0;
+        zMove = -0.2;
+    } else if ((-50.1 <= x1 && x1 <= -49.9) && (-82.1 <= z1 && z1 <= -81.9)) {
+        xMove = 0.2;
+        zMove = 0;
+    } else if ((13.9 <= x1 && x1 <= 14.1) && (-82.1 <= z1 && z1 <= -81.9)) {
+        xMove = 0;
+        zMove = -0.2;
+    }
+    x1 += xMove;
+    x2 += xMove;
+    z1 += zMove;
+    z2 += zMove;
+}
+
+function createMonsterBuffers() {
+    monsterVertexPositionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, monsterVertexPositionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(monsterCoordinates), gl.STATIC_DRAW);
+    monsterVertexPositionBuffer.itemSize = 3;
+    monsterVertexPositionBuffer.numItems = 24;
+
+    monsterVertexTextureCoordBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, monsterVertexTextureCoordBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(monsterTextureCoordinates), gl.STATIC_DRAW);
+    monsterVertexTextureCoordBuffer.itemSize = 2;
+    monsterVertexTextureCoordBuffer.numItems = 24
+}
+
+function monsterCollisionDetect() {
+    if (((x1 - 0.5 <= xPosition && xPosition <= x2 + 0.5) &&
+        ((z1 - 0.5 <= zPosition && zPosition <= z1 + 0.5) || (z2 - 0.5 <= zPosition && zPosition <= z2 + 0.5))) ||
+        ((z1 - 0.5 <= zPosition && zPosition <= z2 + 0.5) &&
+        ((x1 - 0.5 <= xPosition && xPosition <= x1 + 0.5) || (x2 - 0.5 <= xPosition && xPosition <= x2 + 0.5)))) {
+        speed = 0;
+        xMove = 0;
+        zMove = 0;
+        gameOver = true;
+    }
+}
 
 // Used to make us "jog" up and down as we move forward.
 var joggingAngle = 0;
@@ -502,6 +651,15 @@ function drawScene() {
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, vertexPositionBuffers[2].numItems);
 
+    //Pošast
+    gl.bindBuffer(gl.ARRAY_BUFFER, monsterVertexTextureCoordBuffer);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, monsterVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindTexture(gl.TEXTURE_2D, textures[7]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, monsterVertexPositionBuffer);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, monsterVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, monsterVertexPositionBuffer.numItems);
+
     // KOVANCI
     // Navaden1
     mat4.translate(mvMatrix, [-50.0, 0.0, 0.0]);
@@ -730,6 +888,9 @@ function handleKeys() {
 //
 function start() {
     canvas = document.getElementById("glcanvas");
+    canvas2 = document.getElementById("HUD");
+    var ctx = canvas2.getContext("2d");
+    ctx.fillStyle = "#FF0000";
 
     gl = initGL(canvas);      // Initialize the GL context
 
@@ -756,19 +917,46 @@ function start() {
         initTextures("CoinBonus.png", 4);
         initTextures("CoinHitrostni.png", 5);
         initTextures("CoinZascitni.png", 6);
+        initTextures("Monster.png", 7);
         initCoinBuffer();
         initBonusCoinBuffer();
         initSpeedCoinBuffer();
         initProtectCoinBuffer();
         loadWorld("floor.txt", 0);
-        loadWorld("sky.txt", 1);
+        loadWorld("Sky.txt", 1);
         loadWorld("walls.txt", 2);
 
         setInterval(function () {
-            if (texturesLoaded) { // only draw scene and animate when textures are loaded.
+            if (texturesLoaded && tocke != 23) { // only draw scene and animate when textures are loaded.
                 requestAnimationFrame(animate);
                 handleKeys();
+                updateMonster(x1, x2, z1, z2);
+                createMonsterBuffers();
                 drawScene();
+                if (!zascita) {
+                    monsterCollisionDetect();
+                }
+                moveMonster();
+                ctx.textAlign = "start";
+                ctx.font = "30px Arial";
+                numPoints = "Points: " + tocke;
+                ctx.clearRect(0, 0, 500, 300);
+                ctx.fillText(numPoints, 20, 50);
+                ctx.fillText(protMonster, 20, 90);
+            }
+            if (tocke == 23) {
+                ctx.textAlign = "center";
+                ctx.font = "50px Arial";
+                ctx.fillText("Congratulations!", 640, 360);
+                ctx.font = "30px Arial";
+                ctx.fillText("You collected all of the coins", 640, 410);
+            }
+            if (gameOver) {
+                ctx.textAlign = "center";
+                ctx.font = "50px Arial";
+                ctx.fillText("Game Over", 640, 360);
+                ctx.font = "30px Arial";
+                ctx.fillText("Monster got you", 640, 410);
             }
         }, 15);
     }
